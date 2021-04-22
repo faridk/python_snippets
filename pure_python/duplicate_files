@@ -1,0 +1,45 @@
+import os
+import hashlib
+import pickle
+
+def md5(fname):
+    hash_md5 = hashlib.md5()
+    with open(fname, "rb") as f:
+        for chunk in iter(lambda: f.read(4096), b""):
+            hash_md5.update(chunk)
+    return hash_md5.hexdigest()
+
+
+dir1_path = "/"
+dir2_path = "/"
+
+dir1 = {}
+dir2 = {}
+
+# for path, subdirs, files in os.walk(dir1_path):
+#     for name in files:
+#         dir1[md5(os.path.join(path, name))] = os.path.join(path, name)
+#
+# for path, subdirs, files in os.walk(dir2_path):
+#     for name in files:
+#         dir2[md5(os.path.join(path, name))] = os.path.join(path, name)
+#
+#
+# with open('dir1.pickle', 'wb') as handle:
+#     pickle.dump(dir1, handle, protocol=pickle.HIGHEST_PROTOCOL)
+#
+# with open('dir2.pickle', 'wb') as handle:
+#     pickle.dump(dir2, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+with open('dir1.pickle', 'rb') as handle:
+    dir1 = pickle.load(handle)
+with open('dir2.pickle', 'rb') as handle:
+    dir2 = pickle.load(handle)
+
+for key in dir1:
+    if key in dir2:
+        if dir1[key].split("/")[-1] != dir2[key].split("/")[-1]:
+            print(dir1[key].split("/")[-1])
+            print(dir2[key].split("/")[-1])
+            print()
+        # os.remove(dir2[key])
